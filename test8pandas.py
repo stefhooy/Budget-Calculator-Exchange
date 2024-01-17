@@ -44,7 +44,7 @@ class CalculateurBudget:
         data = {
             'Budget Initial': [self.initial_budget],
             'Budget Restant': [self.remaining_budget],
-            'Dépense': self.expenses
+            'Dépenses': self.expenses
         }
         df = pd.DataFrame(data)
         df.to_csv(filename, index=False)
