@@ -1,3 +1,14 @@
+#Python Budget Calculator 2024
+
+#Stephan Pentchev
+
+#This budget calculator uses pandas for data manipulation and saving the data to CSV
+#files in structured format. CalculateurBudget class: is the core of the program, handling
+#the budget and expenses. It provides methods to calculate budgets, record expenses and display financial summaries
+#Furthermore, it also saves and loads data from CSV files. We use here object oriented programming in this code in order to organize
+#and structure the program in order to reuse it later when we'll record other spendinds or load other recordings in our financial summary. 
+
+
 #We import pandas here in order to save and manipulate our expenses
 import pandas as pd
 
