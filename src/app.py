@@ -876,33 +876,42 @@ if st.session_state.expenses:
         color_continuous_scale="RdYlGn_r",
         title=t["map_title"],
         hover_name="Country",
-        hover_data={"Total": f":.2f", "Country": False},
+        hover_data={"Total": ":.2f", "Country": False},
         labels={"Total": dc},
     )
     fig_map.update_traces(
         hovertemplate=(f"<b>%{{hovertext}}</b><br>"
                        f"{CURRENCIES[dc]['symbol']}%{{z:,.2f}}<extra></extra>")
     )
+    fig_map.update_geos(
+        projection_type="natural earth",
+        bgcolor="rgba(0,0,0,0)",
+        showframe=False,
+        showcoastlines=True,
+        coastlinecolor="rgba(255,255,255,0.25)",
+        showland=True,
+        landcolor="#1e2a3a",
+        showocean=True,
+        oceancolor="#0d1821",
+        showcountries=True,
+        countrycolor="rgba(255,255,255,0.18)",
+        showlakes=False,
+        fitbounds=False,           # key: don't auto-zoom to data
+        visible=True,
+        lataxis_range=[-60, 85],   # show most of the world
+        lonaxis_range=[-180, 180],
+    )
     fig_map.update_layout(
-        geo=dict(
-            showframe=False,
-            showcoastlines=True,
-            coastlinecolor="rgba(255,255,255,0.2)",
-            showland=True,
-            landcolor="rgba(255,255,255,0.05)",
-            showocean=True,
-            oceancolor="rgba(0,0,0,0)",
-            showcountries=True,
-            countrycolor="rgba(255,255,255,0.15)",
-            projection_type="natural earth",
-        ),
         coloraxis_colorbar=dict(
             title=dc,
             tickprefix=CURRENCIES[dc]["symbol"],
+            bgcolor="rgba(0,0,0,0.4)",
+            bordercolor="rgba(255,255,255,0.1)",
+            borderwidth=1,
         ),
         paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(t=50, b=10, l=0, r=0),
-        height=450,
+        margin=dict(t=50, b=0, l=0, r=0),
+        height=500,
     )
     st.plotly_chart(fig_map, use_container_width=True)
 
