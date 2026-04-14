@@ -8,7 +8,7 @@ import streamlit as st
 
 from config import CURRENCIES
 
-IMAGES_DIR = os.path.join(os.path.dirname(__file__), "..", "images")
+IMAGES_DIR = os.path.join(os.path.dirname(__file__), "assets")
 
 
 def _image_b64(filename: str) -> str | None:

@@ -49,7 +49,12 @@ Summary table of all currencies detected in the loaded data — transaction coun
 
 ### Hero banners
 
-Per-language banner images at the top of the landing page. Drop `hero_en.jpg`, `hero_fr.jpg`, `hero_es.jpg` into the `images/` folder (recommended 6000x2000px, 3:1 ratio).
+Per-language banner images at the top of the landing page and dashboard. Drop your images into `src/assets/`:
+
+| File | Where it appears | Recommended size |
+| --- | --- | --- |
+| `hero_en/fr/es.jpg` | Landing page hero | 1200 × 400 px (3:1) |
+| `dashboard_en/fr/es.jpg` | Dashboard header strip | 1200 × 200 px (6:1) |
 
 ---
 
@@ -58,16 +63,22 @@ Per-language banner images at the top of the landing page. Drop `hero_en.jpg`, `
 ```
 Budget-Calculator-Exchange/
 ├── src/
-│   └── app.py                  # Main Streamlit app
+│   ├── main.py                 # Entry point (routing only)
+│   ├── config.py               # Currencies, translations, category colours
+│   ├── utils.py                # Currency conversion, formatting, image helpers
+│   ├── file_parser.py          # CSV / JSON / Excel import
+│   ├── session.py              # Session state init, load, export
+│   ├── assets/                 # Banner images (hero + dashboard, per language)
+│   └── components/
+│       ├── landing.py          # Upload page
+│       ├── setup.py            # Budget setup card
+│       ├── sidebar.py          # Sidebar panel
+│       └── dashboard.py        # Charts, metrics, expense log
 ├── data/
-│   └── statswinter24.csv       # Sample data: Winter 2024 exchange (5 months, 8 countries)
-├── images/
-│   ├── hero_en.jpg             # English banner (optional)
-│   ├── hero_fr.jpg             # French banner (optional)
-│   ├── hero_es.jpg             # Spanish banner (optional)
-│   └── PLACE_IMAGES_HERE.md   # Instructions for banner images
+│   └── statswinter24.csv       # Sample data: Winter 2024 exchange
+├── archive/                    # Original 2024 scripts (not part of the app)
 ├── .streamlit/
-│   └── config.toml             # Streamlit theme config (dark mode)
+│   └── config.toml             # Dark theme + teal primary colour
 ├── requirements.txt
 └── README.md
 ```
@@ -77,28 +88,38 @@ Budget-Calculator-Exchange/
 ## Running locally
 
 ```bash
-# From the repo root
-python -m streamlit run src/app.py
+# 1. Clone the repo
+git clone https://github.com/your-username/Budget-Calculator-Exchange.git
+cd Budget-Calculator-Exchange
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the app
+python -m streamlit run src/main.py
 ```
 
-Requirements: Python 3.10+, packages in `requirements.txt`.
+Then open [http://localhost:8501](http://localhost:8501) in your browser.
+
+Requirements: Python 3.10+
 
 ```
 streamlit>=1.30.0
 pandas>=2.0.0
 plotly>=5.18.0
+openpyxl>=3.0.0
 ```
 
 ---
 
 ## Deploying to Streamlit Cloud
 
-1. Push the repo to GitHub (keep images committed — do not gitignore them)
+1. Push the repo to GitHub — make sure `src/assets/` images are committed (do not gitignore them)
 2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub
 3. Click **Create app** and fill in:
    - Repository: `your-username/Budget-Calculator-Exchange`
    - Branch: `main`
-   - Main file path: `src/app.py`
+   - Main file path: `src/main.py`
 4. Click **Deploy**
 
 No secrets or environment variables required.

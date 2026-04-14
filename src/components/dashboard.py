@@ -25,7 +25,7 @@ def render_dashboard(t: dict):
 
     st.markdown(
         f"""
-        <div style="{dbg} border-radius:12px; overflow:hidden; margin-bottom:20px;">
+        <div style="{dbg} border-radius:12px; overflow:hidden; margin-bottom:20px; aspect-ratio:6/1; width:100%;">
             <div style="{inner_bg} padding:24px 32px; display:flex; align-items:center; gap:16px;">
                 <span style="font-size:2rem; text-shadow:0 2px 6px rgba(0,0,0,0.6);">💶</span>
                 <div>
