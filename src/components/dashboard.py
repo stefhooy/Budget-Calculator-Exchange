@@ -15,7 +15,7 @@ def render_dashboard(t: dict):
     bc = st.session_state.budget_currency
 
     # ── Dashboard header banner ───────────────────────────────────────────────
-    b64 = _image_b64(t["hero_image"])
+    b64 = _image_b64(t["dashboard_image"])
     if b64:
         dbg      = f"background-image: url('{b64}'); background-size: cover; background-position: center 40%;"
         inner_bg = "background: rgba(0,0,0,0.50);"
