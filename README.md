@@ -95,18 +95,6 @@ plotly>=5.18.0
 openpyxl>=3.0.0
 ```
 
-## Deploying to Streamlit Cloud
-
-1. Push the repo to GitHub, make sure `src/assets/` images are committed (do not gitignore them)
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub
-3. Click **Create app** and fill in:
-   - Repository: `stefhooy/Budget-Calculator-Exchange`
-   - Branch: `main`
-   - Main file path: `src/main.py`
-4. Click **Deploy**
-
-No secrets or environment variables required.
-
 ## Try it out
 
 Load `data/statswinter24.csv` from this repo to see the app in action. It contains real spending data across 5 months and 8 countries (Hungary, Croatia, France, Turkey, Malta, Austria, Bulgaria, Portugal, Sweden, Spain, Slovakia) with multiple currencies (HUF, EUR, CAD, SEK, TRY).
