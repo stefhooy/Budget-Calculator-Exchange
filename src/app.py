@@ -181,6 +181,7 @@ LANG = {
                         "It contains real spending data across 5 months and 8 countries "
                         "with multiple currencies (HUF, EUR, CAD, SEK, TRY)."),
         "bar_country_title": "Spending by Country",
+        "map_title": "Geographic Spending Map",
         "monthly_chart_title": "Monthly Spending vs Budget",
         "monthly_x": "Month",
         "monthly_budget_line": "Monthly Budget",
@@ -261,6 +262,7 @@ LANG = {
                         "Il contient des données réelles sur 5 mois et 8 pays "
                         "avec plusieurs devises (HUF, EUR, CAD, SEK, TRY)."),
         "bar_country_title": "Dépenses par Pays",
+        "map_title": "Carte Géographique des Dépenses",
         "monthly_chart_title": "Dépenses Mensuelles vs Budget",
         "monthly_x": "Mois",
         "monthly_budget_line": "Budget Mensuel",
@@ -341,6 +343,7 @@ LANG = {
                         "Contiene datos reales de gastos durante 5 meses y 8 países "
                         "con múltiples divisas (HUF, EUR, CAD, SEK, TRY)."),
         "bar_country_title": "Gastos por País",
+        "map_title": "Mapa Geográfico de Gastos",
         "monthly_chart_title": "Gastos Mensuales vs Presupuesto",
         "monthly_x": "Mes",
         "monthly_budget_line": "Presupuesto Mensual",
@@ -858,6 +861,50 @@ if st.session_state.expenses:
             height=max(300, len(country_totals) * 38),
         )
         st.plotly_chart(fig_bar, use_container_width=True)
+
+    # ── Geographic map ────────────────────────────────────────────────────────
+    country_map = (
+        df.groupby("Description")["Amount_display"].sum()
+          .reset_index()
+          .rename(columns={"Description": "Country", "Amount_display": "Total"})
+    )
+    fig_map = px.choropleth(
+        country_map,
+        locations="Country",
+        locationmode="country names",
+        color="Total",
+        color_continuous_scale="RdYlGn_r",
+        title=t["map_title"],
+        hover_name="Country",
+        hover_data={"Total": f":.2f", "Country": False},
+        labels={"Total": dc},
+    )
+    fig_map.update_traces(
+        hovertemplate=(f"<b>%{{hovertext}}</b><br>"
+                       f"{CURRENCIES[dc]['symbol']}%{{z:,.2f}}<extra></extra>")
+    )
+    fig_map.update_layout(
+        geo=dict(
+            showframe=False,
+            showcoastlines=True,
+            coastlinecolor="rgba(255,255,255,0.2)",
+            showland=True,
+            landcolor="rgba(255,255,255,0.05)",
+            showocean=True,
+            oceancolor="rgba(0,0,0,0)",
+            showcountries=True,
+            countrycolor="rgba(255,255,255,0.15)",
+            projection_type="natural earth",
+        ),
+        coloraxis_colorbar=dict(
+            title=dc,
+            tickprefix=CURRENCIES[dc]["symbol"],
+        ),
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=50, b=10, l=0, r=0),
+        height=450,
+    )
+    st.plotly_chart(fig_map, use_container_width=True)
 
     df_line = df.copy()
     df_line["Cumulative"] = df_line["Amount_display"].cumsum()
