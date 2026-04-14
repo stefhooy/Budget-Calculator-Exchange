@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from config import CURRENCIES, cat_color
+from config import CURRENCIES, cat_color, translate_country
 from utils import _image_b64, convert_amount, fmt, to_display
 
 
@@ -133,10 +133,12 @@ def _render_pie_and_country_bar(df, dc, t):
         st.plotly_chart(fig, use_container_width=True)
 
     with col_bar:
+        lang = st.session_state.get("language", "EN")
         ct = (df.groupby("Description")["Amount_display"].sum()
                 .reset_index()
                 .rename(columns={"Description": "Country", "Amount_display": "Total"})
                 .sort_values("Total", ascending=True))
+        ct["Country"] = ct["Country"].apply(lambda n: translate_country(n, lang))
         fig = go.Figure(go.Bar(
             y=ct["Country"], x=ct["Total"], orientation="h",
             marker=dict(color=ct["Total"], colorscale="RdYlGn_r", showscale=False),
@@ -154,14 +156,16 @@ def _render_pie_and_country_bar(df, dc, t):
 
 
 def _render_map(df, dc, t):
+    lang = st.session_state.get("language", "EN")
     cm = (df.groupby("Description")["Amount_display"].sum()
             .reset_index()
             .rename(columns={"Description": "Country", "Amount_display": "Total"}))
+    cm["Country_display"] = cm["Country"].apply(lambda n: translate_country(n, lang))
     fig = px.choropleth(
         cm, locations="Country", locationmode="country names",
         color="Total", color_continuous_scale="RdYlGn_r",
-        title=t["map_title"], hover_name="Country",
-        hover_data={"Total": ":.2f", "Country": False}, labels={"Total": dc},
+        title=t["map_title"], hover_name="Country_display",
+        hover_data={"Total": ":.2f", "Country": False, "Country_display": False}, labels={"Total": dc},
     )
     fig.update_traces(
         hovertemplate=f"<b>%{{hovertext}}</b><br>{CURRENCIES[dc]['symbol']}%{{z:,.2f}}<extra></extra>"
@@ -230,13 +234,18 @@ def _render_monthly(df, dc, t, monthly):
 def _render_country_drill(df, dc, t, initial_dc):
     st.divider()
     st.subheader(f"🔍 {t['country_drill_header']}")
-    countries = sorted(df["Description"].dropna().unique().tolist())
-    selected = st.selectbox(t["select_country"], [t["all_label"]] + countries, key="country_drill_select")
+    lang = st.session_state.get("language", "EN")
+    countries_en = sorted(df["Description"].dropna().unique().tolist())
+    # Map translated name → English for filtering
+    translation_map = {translate_country(c, lang): c for c in countries_en}
+    countries_display = [translate_country(c, lang) for c in countries_en]
+    selected_display = st.selectbox(t["select_country"], [t["all_label"]] + countries_display, key="country_drill_select")
 
-    if selected == t["all_label"]:
+    if selected_display == t["all_label"]:
         return
 
-    dfc = df[df["Description"] == selected].copy()
+    selected_en = translation_map.get(selected_display, selected_display)
+    dfc = df[df["Description"] == selected_en].copy()
     total_c = dfc["Amount_display"].sum()
 
     c1, c2, c3 = st.columns(3)
@@ -250,7 +259,7 @@ def _render_country_drill(df, dc, t, initial_dc):
         cat_c = dfc.groupby("Category")["Amount_display"].sum().reset_index().sort_values("Amount_display", ascending=False)
         colors = [cat_color(n, i) for i, n in enumerate(cat_c["Category"])]
         fig = px.pie(cat_c, values="Amount_display", names="Category",
-                     title=f"{t['drill_pie_title']} {selected}",
+                     title=f"{t['drill_pie_title']} {selected_display}",
                      color_discrete_sequence=colors, hole=0.4)
         fig.update_traces(
             textinfo="label+percent", textfont_size=12,
@@ -271,7 +280,7 @@ def _render_country_drill(df, dc, t, initial_dc):
             hovertemplate=f"<b>%{{x}}</b><br>{CURRENCIES[dc]['symbol']}%{{y:,.2f}}<extra></extra>",
         ))
         fig.update_layout(
-            title=f"{t['drill_timeline_title']} {selected}",
+            title=f"{t['drill_timeline_title']} {selected_display}",
             xaxis=dict(title=t["monthly_x"], type="category"),
             yaxis_title=dc, plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)", margin=dict(t=50, b=40),

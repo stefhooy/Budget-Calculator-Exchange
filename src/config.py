@@ -50,6 +50,41 @@ def cat_color(name: str, idx: int = 0) -> str:
     return CATEGORY_COLORS.get(name, _DEFAULT_CAT_COLORS[idx % len(_DEFAULT_CAT_COLORS)])
 
 
+# ── Country name translations ─────────────────────────────────────────────────
+COUNTRY_TRANSLATIONS = {
+    "Austria":         {"EN": "Austria",         "FR": "Autriche",           "ES": "Austria"},
+    "Belgium":         {"EN": "Belgium",          "FR": "Belgique",           "ES": "Bélgica"},
+    "Bulgaria":        {"EN": "Bulgaria",         "FR": "Bulgarie",           "ES": "Bulgaria"},
+    "Croatia":         {"EN": "Croatia",          "FR": "Croatie",            "ES": "Croacia"},
+    "Czech Republic":  {"EN": "Czech Republic",   "FR": "République tchèque", "ES": "República Checa"},
+    "Denmark":         {"EN": "Denmark",          "FR": "Danemark",           "ES": "Dinamarca"},
+    "France":          {"EN": "France",           "FR": "France",             "ES": "Francia"},
+    "Germany":         {"EN": "Germany",          "FR": "Allemagne",          "ES": "Alemania"},
+    "Greece":          {"EN": "Greece",           "FR": "Grèce",              "ES": "Grecia"},
+    "Hungary":         {"EN": "Hungary",          "FR": "Hongrie",            "ES": "Hungría"},
+    "Ireland":         {"EN": "Ireland",          "FR": "Irlande",            "ES": "Irlanda"},
+    "Italy":           {"EN": "Italy",            "FR": "Italie",             "ES": "Italia"},
+    "Malta":           {"EN": "Malta",            "FR": "Malte",              "ES": "Malta"},
+    "Netherlands":     {"EN": "Netherlands",      "FR": "Pays-Bas",           "ES": "Países Bajos"},
+    "Norway":          {"EN": "Norway",           "FR": "Norvège",            "ES": "Noruega"},
+    "Poland":          {"EN": "Poland",           "FR": "Pologne",            "ES": "Polonia"},
+    "Portugal":        {"EN": "Portugal",         "FR": "Portugal",           "ES": "Portugal"},
+    "Romania":         {"EN": "Romania",          "FR": "Roumanie",           "ES": "Rumanía"},
+    "Slovakia":        {"EN": "Slovakia",         "FR": "Slovaquie",          "ES": "Eslovaquia"},
+    "Spain":           {"EN": "Spain",            "FR": "Espagne",            "ES": "España"},
+    "Sweden":          {"EN": "Sweden",           "FR": "Suède",              "ES": "Suecia"},
+    "Switzerland":     {"EN": "Switzerland",      "FR": "Suisse",             "ES": "Suiza"},
+    "Turkey":          {"EN": "Turkey",           "FR": "Turquie",            "ES": "Turquía"},
+    "United Kingdom":  {"EN": "United Kingdom",   "FR": "Royaume-Uni",        "ES": "Reino Unido"},
+}
+
+
+def translate_country(name: str, lang: str) -> str:
+    """Return the translated country name, falling back to the original if unknown."""
+    entry = COUNTRY_TRANSLATIONS.get(name)
+    return entry[lang] if entry and lang in entry else name
+
+
 MONTH_MAP = {
     "january": "01", "february": "02", "march": "03", "april": "04",
     "may": "05",     "june": "06",     "july": "07",  "august": "08",
