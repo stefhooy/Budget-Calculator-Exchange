@@ -4,7 +4,7 @@
 
 A multilingual personal finance tool for tracking spending across countries and currencies. Built during the Winter 2024 exchange at IE University, remastered in 2026 with a complete UI overhaul.
 
-**Live app:** [share.streamlit.io](https://share.streamlit.io) *(deploy your own from this repo)*
+**Live app:** [budget-calculator-tracker.streamlit.app](https://budget-calculator-tracker.streamlit.app)
 
 ---
 
